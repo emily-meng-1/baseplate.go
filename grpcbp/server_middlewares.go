@@ -2,6 +2,7 @@ package grpcbp
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"time"
 
@@ -117,7 +118,15 @@ func InitializeEdgeContext(ctx context.Context, impl ecinterface.Interface) cont
 		return ctx
 	}
 
-	ctx, err := impl.HeaderToContext(ctx, value)
+	decodedValue, err := base64.StdEncoding.DecodeString(value)
+	if err != nil {
+		log.C(ctx).Errorw(
+			"Error while decoding base 64 header value",
+			"err", err,
+		)
+	}
+
+	ctx, err = impl.HeaderToContext(ctx, string(decodedValue))
 	if err != nil {
 		log.C(ctx).Errorw(
 			"Error while parsing EdgeRequestContext",
