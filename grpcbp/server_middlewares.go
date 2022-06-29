@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"time"
 
 	"google.golang.org/grpc"
@@ -117,6 +118,9 @@ func InitializeEdgeContext(ctx context.Context, impl ecinterface.Interface) cont
 	if !ok {
 		return ctx
 	}
+
+	fmt.Println("---------- in InitializeEdgeContext bp ----------")
+	fmt.Println(value)
 
 	decodedValue, err := base64.StdEncoding.DecodeString(value)
 	if err != nil {
